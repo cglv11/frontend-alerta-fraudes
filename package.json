@@ -2,10 +2,10 @@
   "name": "frontend",
   "version": "0.0.0",
   "scripts": {
-    "ng": "ng",
+    "prestart": "node load-env.js",
     "start": "ng serve",
+    "prebuild": "node load-env.js",
     "build": "ng build",
-    "watch": "ng build --watch --configuration development",
     "test": "ng test",
     "format": "prettier --write \"src/**/*.{ts,html,css,json}\"",
     "format:check": "prettier --check \"src/**/*.{ts,html,css,json}\""
@@ -40,6 +40,7 @@
     "@angular/cli": "^21.0.5",
     "@angular/compiler-cli": "^21.0.0",
     "@tailwindcss/postcss": "^4.1.12",
+    "dotenv": "^17.2.3",
     "jsdom": "^27.1.0",
     "postcss": "^8.5.3",
     "prettier": "^3.7.4",
