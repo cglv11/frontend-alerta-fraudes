@@ -3,7 +3,7 @@
     <!-- Header -->
     <div class="text-center mb-8">
       <h1 class="text-4xl font-bold text-gray-900 mb-2">🔍 User Risk Dashboard</h1>
-      <p class="text-gray-600">Search for a user to view their fraud risk profile</p>
+      <p class="text-gray-600">Select a user to view their fraud risk profile</p>
     </div>
 
     <!-- Search Card -->
@@ -12,29 +12,61 @@
         <div class="flex gap-4">
           <div class="flex-1">
             <label for="userId" class="block text-sm font-medium text-gray-700 mb-2">
-              User ID
+              Select User
             </label>
-            <input
-              id="userId"
-              type="text"
-              formControlName="userId"
-              placeholder="e.g., user-test-1"
-              class="w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all text-lg"
-              [class.border-red-500]="
-                hasError('userId', 'required') || hasError('userId', 'minlength')
-              "
-            />
-            @if (hasError('userId', 'required')) {
-              <p class="mt-1 text-sm text-red-600">User ID is required</p>
-            }
-            @if (hasError('userId', 'minlength')) {
-              <p class="mt-1 text-sm text-red-600">User ID must be at least 3 characters</p>
+
+            @if (loadingUsers()) {
+              <div class="flex items-center gap-2 text-gray-600">
+                <svg class="animate-spin h-5 w-5" viewBox="0 0 24 24">
+                  <circle
+                    class="opacity-25"
+                    cx="12"
+                    cy="12"
+                    r="10"
+                    stroke="currentColor"
+                    stroke-width="4"
+                    fill="none"
+                  ></circle>
+                  <path
+                    class="opacity-75"
+                    fill="currentColor"
+                    d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                  ></path>
+                </svg>
+                Loading users...
+              </div>
+            } @else {
+              <select
+                id="userId"
+                formControlName="userId"
+                class="w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all text-lg"
+                [class.border-red-500]="hasError('userId', 'required')"
+              >
+                <option value="" disabled>Select a user</option>
+                @for (user of users(); track user.userId) {
+                  <option [value]="user.userId">
+                    {{ user.getDisplayName() }} - Last activity:
+                    {{ formatDate(user.lastTransactionDate) }}
+                  </option>
+                }
+              </select>
+
+              @if (hasError('userId', 'required')) {
+                <p class="mt-1 text-sm text-red-600">Please select a user</p>
+              }
+
+              @if (users().length === 0) {
+                <p class="mt-2 text-sm text-gray-500">
+                  No users found. Create some transactions first.
+                </p>
+              }
             }
           </div>
+
           <div class="flex items-end">
             <button
               type="submit"
-              [disabled]="loading()"
+              [disabled]="loading() || loadingUsers() || users().length === 0"
               class="px-8 py-3 bg-blue-600 hover:bg-blue-700 disabled:bg-gray-400 text-white font-semibold rounded-lg transition-colors duration-200 flex items-center gap-2"
             >
               @if (loading()) {
@@ -54,9 +86,9 @@
                     d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
                   ></path>
                 </svg>
-                Searching...
+                Loading...
               } @else {
-                🔍 Search
+                🔍 Analyze
               }
             </button>
           </div>
@@ -116,11 +148,13 @@
     }
 
     <!-- Empty State (Initial) -->
-    @if (!riskProfile() && !loading() && !error()) {
+    @if (!riskProfile() && !loading() && !error() && !loadingUsers()) {
       <div class="text-center py-16">
         <div class="text-6xl mb-4">🔍</div>
-        <h3 class="text-xl font-semibold text-gray-900 mb-2">Search for a user to get started</h3>
-        <p class="text-gray-600">Enter a user ID above to view their fraud risk profile</p>
+        <h3 class="text-xl font-semibold text-gray-900 mb-2">Select a user to get started</h3>
+        <p class="text-gray-600">
+          Choose a user from the dropdown above to view their fraud risk profile
+        </p>
       </div>
     }
   </div>
