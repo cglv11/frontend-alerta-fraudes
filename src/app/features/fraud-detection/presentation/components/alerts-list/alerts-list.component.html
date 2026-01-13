@@ -1,0 +1,49 @@
+<div class="bg-white rounded-lg shadow-lg p-6">
+  <h3 class="text-lg font-semibold text-gray-900 mb-4">🚨 Active Fraud Alerts</h3>
+
+  @if (alerts().length === 0) {
+    <div class="text-center py-8 text-gray-500">
+      <p class="text-lg">✅ No alerts detected</p>
+      <p class="text-sm mt-2">This user's activity appears normal</p>
+    </div>
+  } @else {
+    <div class="space-y-4">
+      @for (alert of alerts(); track alert.type) {
+        <div class="border-l-4 p-4 rounded-r-lg" [ngClass]="getSeverityColor(alert.severity)">
+          <!-- Alert Header -->
+          <div class="flex items-start justify-between mb-2">
+            <div class="flex items-center gap-2">
+              <span class="text-2xl">{{ alert.getAlertIcon() }}</span>
+              <div>
+                <h4 class="font-semibold">{{ alert.type.replace('_', ' ') }}</h4>
+                <p class="text-sm text-gray-600">{{ alert.message }}</p>
+              </div>
+            </div>
+            <span
+              class="px-2 py-1 text-xs font-semibold rounded-full border"
+              [ngClass]="getSeverityColor(alert.severity)"
+            >
+              {{ alert.severity }}
+            </span>
+          </div>
+
+          <!-- Alert Details -->
+          <div class="mt-3 text-sm text-gray-600">
+            <p>Detected: {{ formatDate(alert.detectedAt) }}</p>
+            <p>Transactions involved: {{ alert.transactionIds.length }}</p>
+
+            <!-- Metadata if exists -->
+            @if (alert.metadata) {
+              <div class="mt-2 p-2 bg-gray-50 rounded text-xs">
+                <p class="font-semibold mb-1">Details:</p>
+                @for (entry of alert.metadata | keyvalue; track entry.key) {
+                  <p>{{ entry.key }}: {{ entry.value }}</p>
+                }
+              </div>
+            }
+          </div>
+        </div>
+      }
+    </div>
+  }
+</div>
