@@ -1,0 +1,109 @@
+<div class="bg-white rounded-lg shadow-lg p-6">
+  <h3 class="text-lg font-semibold text-gray-900 mb-4">📊 Transaction Statistics</h3>
+
+  <!-- Transaction Count -->
+  <div class="mb-6">
+    <div class="flex items-center justify-between mb-2">
+      <span class="text-sm font-medium text-gray-700">Transaction Volume</span>
+      <span
+        class="text-sm font-semibold"
+        [ngClass]="getChangeColor(stats().getTransactionCountChange())"
+      >
+        {{ getChangeIcon(stats().getTransactionCountChange()) }}
+        {{ stats().getTransactionCountChange().toFixed(0) }}%
+      </span>
+    </div>
+    <div class="grid grid-cols-2 gap-4">
+      <div class="bg-blue-50 rounded-lg p-3">
+        <p class="text-xs text-gray-600">Last 24h</p>
+        <p class="text-xl font-bold text-gray-900">
+          {{ stats().last24h.transactionCount }}
+        </p>
+      </div>
+      <div class="bg-gray-50 rounded-lg p-3">
+        <p class="text-xs text-gray-600">Daily Avg (30d)</p>
+        <p class="text-xl font-bold text-gray-900">
+          {{ (stats().last30d.transactionCount / 30).toFixed(1) }}
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Amount Stats -->
+  <div class="mb-6">
+    <div class="flex items-center justify-between mb-2">
+      <span class="text-sm font-medium text-gray-700">Average Amount</span>
+      <span class="text-sm font-semibold" [ngClass]="getChangeColor(stats().getAmountChange())">
+        {{ getChangeIcon(stats().getAmountChange()) }}
+        {{ stats().getAmountChange().toFixed(0) }}%
+      </span>
+    </div>
+    <div class="grid grid-cols-2 gap-4">
+      <div class="bg-blue-50 rounded-lg p-3">
+        <p class="text-xs text-gray-600">Last 24h</p>
+        <p class="text-lg font-bold text-gray-900">
+          {{ formatCurrency(stats().last24h.avgAmount) }}
+        </p>
+      </div>
+      <div class="bg-gray-50 rounded-lg p-3">
+        <p class="text-xs text-gray-600">Last 30d</p>
+        <p class="text-lg font-bold text-gray-900">
+          {{ formatCurrency(stats().last30d.avgAmount) }}
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Total Amount -->
+  <div class="mb-6">
+    <span class="text-sm font-medium text-gray-700 block mb-2">Total Amount</span>
+    <div class="grid grid-cols-2 gap-4">
+      <div class="bg-blue-50 rounded-lg p-3">
+        <p class="text-xs text-gray-600">Last 24h</p>
+        <p class="text-lg font-bold text-gray-900">
+          {{ formatCurrency(stats().last24h.totalAmount) }}
+        </p>
+      </div>
+      <div class="bg-gray-50 rounded-lg p-3">
+        <p class="text-xs text-gray-600">Last 30d</p>
+        <p class="text-lg font-bold text-gray-900">
+          {{ formatCurrency(stats().last30d.totalAmount) }}
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Countries -->
+  <div>
+    <span class="text-sm font-medium text-gray-700 block mb-2">
+      Geographic Activity
+      @if (stats().hasNewCountries()) {
+        <span class="ml-2 text-xs px-2 py-1 bg-orange-100 text-orange-800 rounded-full">
+          ⚠️ New countries detected
+        </span>
+      }
+    </span>
+    <div class="grid grid-cols-2 gap-4">
+      <div class="bg-blue-50 rounded-lg p-3">
+        <p class="text-xs text-gray-600 mb-1">Last 24h</p>
+        <div class="flex flex-wrap gap-1">
+          @for (country of stats().last24h.countries; track country) {
+            <span class="px-2 py-1 bg-blue-200 text-blue-800 rounded text-xs font-semibold">
+              {{ country }}
+            </span>
+          }
+        </div>
+      </div>
+      <div class="bg-gray-50 rounded-lg p-3">
+        <p class="text-xs text-gray-600 mb-1">Last 30d</p>
+        <div class="flex flex-wrap gap-1">
+          @for (country of stats().last30d.countries; track country) {
+            <span class="px-2 py-1 bg-gray-300 text-gray-800 rounded text-xs font-semibold">
+              {{ country }}
+            </span>
+          }
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
