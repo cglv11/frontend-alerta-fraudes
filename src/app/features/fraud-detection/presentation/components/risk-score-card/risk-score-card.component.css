@@ -1,1 +1,11 @@
-/* Additional custom styles if needed */
+/* Ensure progress bar is visible even at 0 */
+.h-4 {
+  min-width: 2px; /* Show at least a thin line */
+}
+
+/* Smooth animation for progress bar */
+.transition-all {
+  transition-property: all;
+  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+  transition-duration: 500ms;
+}
