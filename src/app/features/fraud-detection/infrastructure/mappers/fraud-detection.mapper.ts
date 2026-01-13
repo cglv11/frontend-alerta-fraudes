@@ -1,8 +1,9 @@
 import { UserRiskProfileModel } from '../../domain/models/user-risk-profile.model';
 import { FraudAlertModel } from '../../domain/models/fraud-alert.model';
 import { BehavioralStatsModel } from '../../domain/models/behavioral-stats.model';
+import { UserModel } from '../../domain/models/user.model';
 
-// DTO coming from backend
+// DTO coming from backend - Risk Profile
 export interface UserRiskProfileDTO {
   userId: string;
   riskScore: number;
@@ -34,8 +35,17 @@ export interface UserRiskProfileDTO {
   calculatedAt: string;
 }
 
+// DTO coming from backend - Users List
+export interface UsersListDTO {
+  users: {
+    userId: string;
+    transactionCount: number;
+    lastTransactionDate: string;
+  }[];
+}
+
 export class FraudDetectionMapper {
-  // Convert backend DTO → Domain model
+  // Convert backend DTO → Domain model (Risk Profile)
   static toDomain(dto: UserRiskProfileDTO): UserRiskProfileModel {
     // Map alerts
     const alerts = dto.alerts.map((alertDto) =>
@@ -63,5 +73,16 @@ export class FraudDetectionMapper {
       stats,
       calculatedAt: new Date(dto.calculatedAt),
     });
+  }
+
+  // Convert backend DTO → Domain models (Users List)
+  static toUserList(dto: UsersListDTO): UserModel[] {
+    return dto.users.map((userDto) =>
+      UserModel.fromPrimitives({
+        userId: userDto.userId,
+        transactionCount: userDto.transactionCount,
+        lastTransactionDate: new Date(userDto.lastTransactionDate),
+      }),
+    );
   }
 }
