@@ -1,0 +1,38 @@
+<div class="bg-white rounded-lg shadow-lg p-6 border-l-4" [ngClass]="getRiskColor()">
+  <!-- Risk Score Header -->
+  <div class="flex items-center justify-between mb-4">
+    <h3 class="text-lg font-semibold text-gray-900">Risk Assessment</h3>
+    <span class="px-3 py-1 rounded-full text-sm font-bold" [ngClass]="getRiskColor()">
+      {{ riskLevel() }}
+    </span>
+  </div>
+
+  <!-- Risk Score -->
+  <div class="mb-4">
+    <div class="flex items-center justify-between mb-2">
+      <span class="text-sm font-medium text-gray-700">Risk Score</span>
+      <span class="text-2xl font-bold text-gray-900">{{ riskScore() }}/100</span>
+    </div>
+
+    <!-- Progress Bar -->
+    <div class="w-full bg-gray-200 rounded-full h-3">
+      <div
+        class="h-3 rounded-full transition-all duration-300"
+        [ngClass]="getProgressColor()"
+        [style.width.%]="riskScore()"
+      ></div>
+    </div>
+  </div>
+
+  <!-- Alerts Summary -->
+  <div class="grid grid-cols-2 gap-4 pt-4 border-t border-gray-200">
+    <div>
+      <p class="text-sm text-gray-600">Active Alerts</p>
+      <p class="text-2xl font-bold text-gray-900">{{ activeAlerts() }}</p>
+    </div>
+    <div>
+      <p class="text-sm text-gray-600">Critical</p>
+      <p class="text-2xl font-bold text-red-600">{{ criticalAlerts() }}</p>
+    </div>
+  </div>
+</div>
